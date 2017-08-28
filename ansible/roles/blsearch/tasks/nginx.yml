@@ -1,0 +1,15 @@
+---
+- name: install 'EPEL Repository'
+  package:
+    name: "epel-release"
+    state: present
+    use: "{{ package_manager }}"
+- name: install 'Nginx'
+  package:
+    name: "nginx"
+    state: present
+    use: "{{ package_manager }}"
+- name: Start Nginx
+  service: 
+    name: nginx
+    state: started

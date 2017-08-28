@@ -1,17 +1,22 @@
-version: "1"
+version: "2"
+settings:
+  conductor_base: centos:7
+defaults:
+  APP_NAME: blsearch
+  APP_USER: "{{ APP_NAME }}"
 services:
-  BLACKLIGHT_APP:
-    image: centos:7
+  main:
+    from: centos:7
+    roles:
+      - blsearch
     ports:
       - "3000:3000"
       - "8983:8983"
-    command: ["/usr/bin/dumb-init", "/bin/bash"]
-    working_dir: "/var/www/BLACKLIGHT_APP"
+    entrypoint: ["/usr/bin/dumb-init", "/bin/bash"]
+    working_dir: "/var/www/{{ APP_NAME }}"
+    user: "{{ APP_USER }}"
     dev_overrides:
       environment:
         - "DEBUG=1"
-      command: ["/usr/bin/dumb-init", '/bin/bash', '/app/ansible/sleep-loop.sh']
-      volumes:
-        - "$PWD/BLACKLIGHT_APP:/var/www/BLACKLIGHT_APP"
-        - "$PWD:/app"
+      command: ["/usr/bin/dumb-init", '/home/{{ APP_NAME }}/.rbenv/shims/foreman', 'start']
 registries: {}
